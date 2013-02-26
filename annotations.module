@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ * Module file for Annotations
+ */
+
+/**
+ * @defgroup annotations AustESE Annotations
+ * @ingroup austese
+ * @{
+ * AustESE Annotations
+ *
+ */
+
+/**
+ * Implements hook_help().
+ *
+ */
+function annotations_help($path, $arg) {
+  switch ($path) {
+    case 'annotations':
+      return t('AustESE Annotations');
+    case 'admin/help#annotations':
+      return t('AustESE Annotations');
+  }
+}
+
+/**
+ * Implements hook_permission().
+ *
+ */
+function annotations_permission() {
+  return array(
+    'view annotations' => array(
+      'title' => t('View annotations'),
+      'description' => t('Allow users to view annotations'),
+    )
+  );
+}
+
+/**
+ * Implements hook_menu().
+ *
+ *
+ * @see hook_menu()
+ * @see menu_example
+ */
+function annotations_menu() {
+  // view annotation tool on a separate page
+  $items['annotations/tool'] = array(
+    'title' => 'Annotation Tool',
+    'page callback' => 'annotations_page',
+    'access arguments' => array('view annotations'),
+    'type' => MENU_CALLBACK
+  );
+  return $items;
+}
+function annotations_page($resources=null) {
+  $breadcrumb = array();
+  $breadcrumb[] = l('Home', '<front>');
+  $breadcrumb[] = l('Annotation Tool', 'annotations');
+  $breadcrumb[] = t(drupal_get_title()); 
+  drupal_set_breadcrumb($breadcrumb);
+  $modulePath = drupal_get_path('module', 'annotations');
+  //drupal_add_css($modulePath . '/ui/resources/css/lanno.css');
+  //drupal_add_js('/sites/all/libraries/ext-4.1.1a/ext-all.js');
+  //drupal_add_js($modulePath . '/ui/app.js');
+  
+  drupal_add_js($modulePath . '/lib/annotator.min.js');
+  drupal_add_js($modulePath . '/lib/annotator.tags.min.js');
+  drupal_add_js($modulePath . '/lib/annotator.permissions.min.js');
+  return theme('annotestpage',array('resources'=>$resources));
+}
+
+function annotations_theme(){
+ return array(
+    'annotestpage' => array(
+       'template' => 'annotationspage',
+       'variables' => array('resources'=> null)
+     )
+ );
+}
+
+/**
+ * @} End of "defgroup annotations".
+ */

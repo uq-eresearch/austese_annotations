@@ -59,7 +59,6 @@ function annotations_menu() {
 function annotations_page($resources=null) {
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
-  $breadcrumb[] = l('Annotation Tool', 'annotations');
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
   return theme('annotestpage',array('resources'=>$resources));

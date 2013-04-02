@@ -77,6 +77,7 @@ function annotations_page_build(&$page) {
     drupal_add_js($modulePath . '/lib/annotator/annotator.image.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/scripts/jquery.waitforimages.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/scripts/jquery.imgareaselect.min.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/lib/scripts/jquery.ba-resize.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/annotations.js', array('every_page' => TRUE));
   }
   

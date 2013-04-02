@@ -1,10 +1,14 @@
 function enableAnnotations(){
     // todo check if logged in
     jQuery('[data-id]').waitForImages(function(){
-      jQuery('[data-id]')
-      .annotator()
-      .annotator('addPlugin','Image')
-       //.annotator('addPlugin', 'Tags')
-      .annotator('addPlugin','LoreStore');
+      jQuery('[data-id]').each(function(i, el){
+          if (!el.annotationsEnabled){
+              jQuery(el).annotator()
+              .annotator('addPlugin','Image')
+              .annotator('addPlugin','LoreStore');
+              el.annotationsEnabled = true;
+          }
+      });    
+      
     })
 }

@@ -5,6 +5,7 @@ function enableAnnotations(){
           if (!el.annotationsEnabled){
               jQuery(el).annotator()
               .annotator('addPlugin','Image')
+              .annotator('addPlugin', 'Motivations')
               .annotator('addPlugin','LoreStore');
               el.annotationsEnabled = true;
           }

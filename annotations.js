@@ -6,6 +6,7 @@ function enableAnnotations(){
               jQuery(el).annotator()
               .annotator('addPlugin','Image')
               .annotator('addPlugin', 'Motivations')
+              .annotator('addPlugin', 'Prov')
               .annotator('addPlugin','LoreStore');
               el.annotationsEnabled = true;
           }

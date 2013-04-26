@@ -104,7 +104,7 @@ function displayAnnotationSearchResults(data){
                         annotatesString = "<p>Annotates <span data-targeturi='" + hasTarget + "'><a href='" + hasTarget + "'>" + hasTarget + "</a></span></p>";
                     }
                     
-                    var result = "<div class='well white-well' data-annoid='" + node['@id'] + "'>"
+                    var result = "<div class='anno well white-well' data-annoid='" + node['@id'] + "'>"
                          + "<p class='pull-right'><span class='replies'></span> "
                             + "<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-comment'/></a>"
                             + (myUserId == node.annotatedBy? 
@@ -138,6 +138,22 @@ function displayAnnotationSearchResults(data){
             });
             jQuery('.annoReplyBtn').on('click',function(){
                 
+            });
+            jQuery('.annoDeleteBtn').on('click', function(){
+                var container = jQuery(this).parent().parent()
+                var annoid = container.data('annoid');
+                jQuery.ajax({
+                    type: 'DELETE',
+                    url: annoid,
+                    success: function(d){
+                        // TODO: add a restore link?
+                        container.removeClass('white-well')
+                            .addClass('alert')
+                            .addClass('alert-success')
+                            .html("<button type='button' class='close' data-dismiss='alert'>&times;</button>Annotation deleted");
+                    }
+                    // TODO handle errors by adding an alert to container
+                });
             });
         }
     }); // end ajax request

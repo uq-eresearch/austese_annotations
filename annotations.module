@@ -48,20 +48,50 @@ function annotations_permission() {
  */
 function annotations_menu() {
   // view annotation tool on a separate page
-  $items['annotations/tool'] = array(
-    'title' => 'Annotation Tool',
-    'page callback' => 'annotations_page',
+  $items['annotations'] = array(
+    'title' => 'Annotations',
+    'page callback' => 'annotations_toc',
+    'access arguments' => array('view annotations'),
+    'type' => MENU_CALLBACK
+  );
+  $items['annotations/my-annotations'] = array(
+    'title' => 'My Annotations',
+    'page callback' => 'annotations_mine',
+    'access arguments' => array('view annotations'),
+    'type' => MENU_CALLBACK
+  );
+  $items['annotations/search'] = array(
+    'title' => 'Search Annotations',
+    'page callback' => 'annotations_search',
     'access arguments' => array('view annotations'),
     'type' => MENU_CALLBACK
   );
   return $items;
 }
-function annotations_page($resources=null) {
+function annotations_toc() {
+  $list[] = l("My Annotations","annotations/my-annotations");
+  $list[] = l("Search Annotations","annotations/search");
+  $render_array['repository_list'] = array(
+    '#theme' => 'item_list',  
+    '#items' => $list
+  );
+  return $render_array;
+}
+function annotations_search($resources=null) {
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
+  $breadcrumb[] = l('Annotations','annotations');
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
-  return theme('annotestpage',array('resources'=>$resources));
+  return theme('annosearch',array('resources'=>$resources));
+}
+function annotations_mine($resources=null) {
+  $breadcrumb = array();
+  $breadcrumb[] = l('Home', '<front>');
+  $breadcrumb[] = l('Annotations','annotations');
+  $breadcrumb[] = t(drupal_get_title()); 
+  drupal_set_breadcrumb($breadcrumb);
+  return theme('myannos',array('resources'=>$resources));
 }
 # insert annotation scripts into all pages, as long as user is logged in (for now until we implement auth support)
 function annotations_page_build(&$page) {
@@ -88,7 +118,11 @@ function annotations_page_build(&$page) {
 
 function annotations_theme(){
  return array(
-    'annotestpage' => array(
+    'annosearch' => array(
+       'template' => 'annosearch',
+       'variables' => array('resources'=> null)
+     ),
+     'myannos' => array(
        'template' => 'annotationspage',
        'variables' => array('resources'=> null)
      )

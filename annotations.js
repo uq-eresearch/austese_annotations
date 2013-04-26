@@ -37,7 +37,7 @@ function displayAnnotationSearchResults(data){
                 }
                 return found;
             }
-            
+            var myUserId = jQuery('#metadata').data('userid');
             // for each graph entry with type annotation
             var nodes = result['@graph'];
             jQuery.each(nodes,function(index, node){
@@ -103,7 +103,15 @@ function displayAnnotationSearchResults(data){
                         // annotates entire resource - most likely a reply
                         annotatesString = "<p>Annotates <span data-targeturi='" + hasTarget + "'><a href='" + hasTarget + "'>" + hasTarget + "</a></span></p>";
                     }
+                    
                     var result = "<div class='well white-well' data-annoid='" + node['@id'] + "'>"
+                         + "<p class='pull-right'><span class='replies'></span> "
+                            + "<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-comment'/></a>"
+                            + (myUserId == node.annotatedBy? 
+                                ("&nbsp;&nbsp;<a title='Edit this annotation' class='annoEditBtn' href='javascript:void(0)'><i class='icon-pencil'/></a>"
+                                + "&nbsp;&nbsp;<a title='Delete this annotation' class='annoDeleteBtn' href='javascript:void(0)'><i class='icon-remove'/></a>")
+                                : "")
+                            + "&nbsp;&nbsp;<a title='Share link to this annotation' class='annoShareBtn' href='javascript:void(0)'><i class='icon-share'/></a></p>"
                          + "<h3>" + heading + "</h3>" + annotatesString ;
                          
                     var body = lookup(nodes,node.hasBody);
@@ -112,11 +120,10 @@ function displayAnnotationSearchResults(data){
                     }
                     result += "<p>" + creatorString + "<a href='" + node['@id'] + "'>" + createdString + "</a></p>";
                     result += "<p style='display:none' class='shareURL'><input style='cursor:text' title='Copy unique identifier for this Annotation' name='annoId' type='text' class='input-xxlarge' readonly value='" + node['@id'] + "'/>";
-                    result += "<p class='pull-right'><span class='replies'></span> <a class='replyBtn' href='javascript:void(0)'>Reply</a>&nbsp;&nbsp;&nbsp;<a class='shareBtn' href='javascript:void(0)'><i class='icon-share'/> Share</a></p>";
+                    
                     
                     result += "</div>";
                     jQuery('#annoSearchResult').append(result);
-                    console.log("done with append")
                     // TODO display replies
                 }
                 
@@ -125,11 +132,11 @@ function displayAnnotationSearchResults(data){
             jQuery('.replies').each(function(i,el){
                 // ajax request to load replies
             });
-            jQuery('.shareBtn').on("click",function(){
+            jQuery('.annoShareBtn').on("click",function(){
                 var container = jQuery(this).parent().parent();
                 container.find('.shareURL').toggle().find('input').select();
             });
-            jQuery('.replyBtn').on('click',function(){
+            jQuery('.annoReplyBtn').on('click',function(){
                 
             });
         }
@@ -137,6 +144,7 @@ function displayAnnotationSearchResults(data){
 }
 
 jQuery().ready(function(){
+    var myUserId = jQuery('#metadata').data('userid');
     // attach handler to annotation search button
     jQuery('#annoSearchBtn').click(function(){
         // search for annotations
@@ -152,10 +160,10 @@ jQuery().ready(function(){
         // display annotation results
         displayAnnotationSearchResults(data);
     });
-    if (jQuery('#metadata').data('userid')){
+    if (jQuery('#metadata').data('op') == 'user'){
         var data = {
                 'asTriples': false,
-                'matchval': jQuery('#metadata').data('userid'),
+                'matchval': myUserId,
                 'matchpred': 'http://www.w3.org/ns/oa#annotatedBy'
         };
         displayAnnotationSearchResults(data);

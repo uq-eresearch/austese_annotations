@@ -1,0 +1,2 @@
+.annoEditBtn, .annoReplyBtn, .annoDeleteBtn, .annoShareBtn {opacity: 0.2}
+.annoEditBtn:hover, .annoReplyBtn:hover, .annoDeleteBtn:hover, .annoShareBtn:hover {opacity:1.0}

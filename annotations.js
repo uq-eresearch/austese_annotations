@@ -26,6 +26,14 @@ function lookup(graph, id){
     }
     return found;
 }
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r, v;
+    r = Math.random() * 16 | 0;
+    v = c === 'x' ? r : r & 0x3 | 0x8;
+    return v.toString(16);
+  });
+};
 function displayAnnotations(options){
     var displayReplies = options.displayReplies;
     var myUserId = jQuery('#metadata').data('userid');
@@ -94,7 +102,7 @@ function displayAnnotations(options){
                 annotatesString = "<p>Annotates <span data-targeturi='" + hasTarget + "'><a href='" + hasTarget + "'>" + hasTarget + "</a></span></p>";
             }
             
-            var result = "<div class='" + options.cls + " well white-well' data-annoid='" + node['@id'] + "'>"
+            var result = "<div class='well white-well " + options.cls + "' data-annoid='" + node['@id'] + "'>"
                  + "<p class='pull-right'>"
                     + (displayReplies? "<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-comment'/></a>" : "")
                     + (myUserId == node.annotatedBy? 
@@ -154,7 +162,75 @@ function displayAnnotations(options){
             });
         });
         jQuery('.annoReplyBtn').on('click',function(){
-            // insert reply editor
+            var container = jQuery(this).parent().parent();
+            if (container.find('.replyEditor').length == 0){
+                // ensure replies are visible
+                container.find('.replies-collapse').collapse('show');
+                // insert reply editor
+                var replyEditor = jQuery("<div class='well white-well replyEditor'><textarea class='input-xxlarge' rows='4' placeholder='Edit reply...'></textarea><br /><button class='saveReplyBtn btn btn-small'>Save</button> <button class='cancelReplyBtn btn btn-small'>Cancel</button></div>");
+                container.append(replyEditor);
+                // scroll to editor
+                replyEditor[0].scrollIntoView();
+                // button handlers
+                container.find('.cancelReplyBtn').on('click',function(){
+                    // remove reply editor on cancel
+                    jQuery(this).parent().remove();
+                });
+                container.find('.saveReplyBtn').on('click',function(){
+                    // save reply
+                    var annoid = "http://www.example.org/dummy";
+                    var bodysrid = "urn:uuid:" + uuid(); // generate new id for body
+                    var rootannoid = jQuery(this).parent().parent().data('annoid');
+                    var replytext = jQuery(this).prev().prev().val();
+                    var newReply = {
+                      "@context": {
+                        "oa": "http://www.w3.org/ns/oa#",
+                        "cnt": "http://www.w3.org/2011/content#"
+                      },
+                      "@graph": [
+                       {
+                         "@id": annoid,
+                         "@type": "oa:Annotation",
+                         "oa:motivatedBy": {"@id": "oa:replying"},
+                         "oa:hasBody": {"@id": bodysrid},
+                         "oa:hasTarget": {"@id": rootannoid}
+                       },{
+                           "@id": bodysrid,
+                           "@type": "cnt:ContentAsText",
+                           "cnt:chars": replytext,
+                           "dc:format": "text/plain" 
+                       }
+                      ]
+                    };
+                    console.log("New reply",newReply)
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: '/lorestore/oa/',
+                        dataType: "json",
+                        processData: false,
+                        data: JSON.stringify(newReply),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        success: function(data){
+                            // remove editor on successful save
+                            container.find('.replyEditor').remove();
+                            // update replies for current annotation
+                            displayAnnotations({
+                                annos: data, 
+                                cls: 'reply',
+                                displayReplies: false, 
+                                displayElement: container.find('.replies-collapse')
+                            });
+                        },
+                        error: function(xhr, status, error){
+                            // alert error and keep editor visible on failure to save
+                            console.log("error",xhr,status,error);
+                            container.find('.replyEditor').parent().append("<p class='alert alert-error'><button type='button' class='close' data-dismiss='alert'>&times;</button> Unable to save reply: " + error + "</p>");
+                        }
+                    });
+                });
+            }
         });
     } else {
         options.displayElement.parent().find('.reply-count').html("<small>" + (count==0?"No":"<i cls='icon-play'> " + count) + " repl" + (count==1?"y":"ies") + "</small>");
@@ -193,7 +269,7 @@ function displayAnnotationSearchResults(data){
         success: function(result){
             jQuery('#annoSearchResult')
                 .empty()
-                .append("<div><a target='_blank' title='Feed of Annotations matching this search' href='" + feedUrl + "'>Subscribe<i icon-class='icon-rss'/></a></div>")
+                .append("<p><a target='_blank' title='Feed of matching Annotations' href='" + feedUrl + "'>Subscribe</a></p>")
             displayAnnotations({
                 annos: result, 
                 cls: 'anno',
@@ -234,30 +310,3 @@ jQuery().ready(function(){
 
 
 
-// template for replies
-/*
- var annoid = "http://www.example.org/dummy";
-var bodysrid = ""; // generate new id for body
-var rootannoid = "";
-var replytext = "";
-{
-  '@context': {
-    "oa": "http://www.w3.org/ns/oa#",
-    "cnt": "http://www.w3.org/2011/content#"
-  },
-  '@graph': [
-   {
-     '@id': annoid,
-     '@type': 'oa:Annotation',
-     'oa:motivatedBy': 'oa:replying',
-     'oa:hasBody': {'@id': bodysrid},
-     'oa:hasTarget': {'@id': rootannoid},
-   },{
-       '@id': bodysrid,
-       '@type': 'cnt:ContentAsText',
-       'cnt:chars': replytext,
-       'dc:format': 'text/plain' 
-   }
-  ]
-}
-*/

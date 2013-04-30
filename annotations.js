@@ -35,7 +35,6 @@ function uuid() {
   });
 };
 function displayAnnotations(options){
-    var displayReplies = options.displayReplies;
     var myUserId = jQuery('#metadata').data('userid');
     // for each graph entry with type annotation
     var nodes = options.annos['@graph'];
@@ -104,15 +103,16 @@ function displayAnnotations(options){
             
             var result = "<div class='well white-well " + options.cls + "' data-annoid='" + node['@id'] + "'>"
                  + "<p class='pull-right'>"
-                    + (displayReplies? "<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-comment'/></a>" : "")
+                    + ((options.displayReplies && heading != 'Reply')? "<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-comment'/></a>" : "")
                     + (myUserId == node.annotatedBy? 
-                        ("&nbsp;&nbsp;<a title='Edit this annotation' class='annoEditBtn' href='javascript:void(0)'><i class='icon-pencil'/></a>"
-                        + "&nbsp;&nbsp;<a title='Delete this annotation' class='annoDeleteBtn' href='javascript:void(0)'><i class='icon-remove'/></a>")
+                        (//"&nbsp;&nbsp;<a title='Edit this annotation' class='annoEditBtn' href='javascript:void(0)'><i class='icon-pencil'/></a>"
+                        //+ 
+                        "&nbsp;&nbsp;<a title='Delete this annotation' class='annoDeleteBtn' href='javascript:void(0)'><i class='icon-remove'/></a>")
                         : "")
                     + "&nbsp;&nbsp;<a title='Share link to this annotation' class='annoShareBtn' href='javascript:void(0)'><i class='icon-share'/></a></p>"
-                 + (displayReplies? "<h4>" + heading + "</h4>" : "")
+                 + (options.displayReplies? "<h4>" + heading + "</h4>" : "")
                  + "<p><small>" + creatorString + "<a href='" + node['@id'] + "'>" + createdString + "</a></small></p>"
-                 + (displayReplies? annotatesString : ""); 
+                 + (options.displayReplies? annotatesString : ""); 
             var body = lookup(nodes,node.hasBody);
             
             if (body){
@@ -120,7 +120,7 @@ function displayAnnotations(options){
             }
             
             result += "<p style='display:none' class='shareURL'><input style='cursor:text' title='Copy unique identifier for this Annotation' name='annoId' type='text' class='input-xxlarge' readonly value='" + node['@id'] + "'/>";
-            if (displayReplies) {
+            if (options.displayReplies && heading != 'Reply') {
                 result += "<div class='replies'></div>";
             }
             
@@ -129,8 +129,8 @@ function displayAnnotations(options){
         }
         
     }); // end each
-    // TODO update placeholders for targets and replies with further ajax requests
-    if (displayReplies) {
+    // TODO update placeholders for targets with further ajax requests
+    if (options.displayReplies) {
         jQuery('.replies').each(function(i,el){
             // ajax request to load replies
             var container = jQuery(el).parent();
@@ -225,7 +225,7 @@ function displayAnnotations(options){
                         },
                         error: function(xhr, status, error){
                             // alert error and keep editor visible on failure to save
-                            console.log("error",xhr,status,error);
+                            console.log("error saving reply",xhr,status,error);
                             container.find('.replyEditor').parent().append("<p class='alert alert-error'><button type='button' class='close' data-dismiss='alert'>&times;</button> Unable to save reply: " + error + "</p>");
                         }
                     });
@@ -233,13 +233,14 @@ function displayAnnotations(options){
             }
         });
     } else {
-        options.displayElement.parent().find('.reply-count').html("<small>" + (count==0?"No":"<i cls='icon-play'> " + count) + " repl" + (count==1?"y":"ies") + "</small>");
+        options.displayElement.parent().find('.reply-count').html("<small>" + (count==0?"No": count) + " repl" + (count==1?"y":"ies") + "</small>");
     }
     jQuery('.annoShareBtn').on("click",function(){
         var container = jQuery(this).parent().parent();
         container.find('.shareURL').toggle().find('input').select();
     });
     jQuery('.annoDeleteBtn').on('click', function(){
+        // TODO warn if annotation has replies - replies are not deleted
         var container = jQuery(this).parent().parent()
         var annoid = container.data('annoid');
         jQuery.ajax({
@@ -251,8 +252,11 @@ function displayAnnotations(options){
                     .addClass('alert')
                     .addClass('alert-success')
                     .html("<button type='button' class='close' data-dismiss='alert'>&times;</button>Annotation deleted");
+            },
+            error: function(xhr, status, error){
+                console.log("error deleting anno",xhr,status,error);
+                container.append("<p class='alert alert-error'><button type='button' class='close' data-dismiss='alert'>&times;</button> Unable to delete annotation: " + error + "</p>");
             }
-            // TODO handle errors by adding an alert to container
         });
     });
 }

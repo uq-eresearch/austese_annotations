@@ -60,38 +60,57 @@ function annotations_menu() {
     'access arguments' => array('view annotations'),
     'type' => MENU_CALLBACK
   );
-  $items['annotations/search'] = array(
-    'title' => 'Search Annotations',
+  $items['annotations/search/%'] = array(
+    'title arguments' => array('title'=>2),
+    'title callback' => 'annotations_display_title',
     'page callback' => 'annotations_search',
+    'page arguments' => array(2),
     'access arguments' => array('view annotations'),
     'type' => MENU_CALLBACK
   );
   return $items;
 }
+function annotations_display_title($title){
+    return 'Search Annotations by '.$title;
+}
 function annotations_toc() {
   $list[] = l("My Annotations","annotations/my-annotations");
-  $list[] = l("Search Annotations","annotations/search");
+  $list[] = l("Search Annotations by Keyword","annotations/search/keyword");
+  $list[] = l("Search Annotations by Creator","annotations/search/creator");
+  $list[] = l("Search Annotations by Target","annotations/search/target");
   $render_array['repository_list'] = array(
     '#theme' => 'item_list',  
     '#items' => $list
   );
   return $render_array;
 }
-function annotations_search($resources=null) {
+function annotations_search($searchtype='keyword') {
+  if (!in_array($searchtype,array("keyword","creator","target"))) {
+    drupal_access_denied();
+    return;
+  }
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
   $breadcrumb[] = l('Annotations','annotations');
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
-  return theme('annosearch',array('resources'=>$resources));
+  if ($searchtype == 'keyword') {
+      return theme('annosearch',array());
+  } else if ($searchtype == 'creator'){
+      return theme('annocreatorsearch', array());
+  } else if ($searchtype == 'target'){
+      return theme('annotargetsearch', array());
+  }
+  return theme('annosearch', array());
 }
-function annotations_mine($resources=null) {
+
+function annotations_mine() {
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
   $breadcrumb[] = l('Annotations','annotations');
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
-  return theme('myannos',array('resources'=>$resources));
+  return theme('myannos',array());
 }
 # insert annotation scripts into all pages, as long as user is logged in (for now until we implement auth support)
 function annotations_page_build(&$page) {
@@ -121,11 +140,19 @@ function annotations_theme(){
  return array(
     'annosearch' => array(
        'template' => 'annosearch',
-       'variables' => array('resources'=> null)
+       'variables' => array()
+     ),
+     'annocreatorsearch' => array(
+       'template' => 'annocreatorsearch',
+       'variables' => array()
+     ),
+     'annotargetsearch' => array(
+       'template' => 'annotargetsearch',
+       'variables' => array()
      ),
      'myannos' => array(
        'template' => 'annotationspage',
-       'variables' => array('resources'=> null)
+       'variables' => array()
      )
  );
 }

@@ -1,3 +1,24 @@
+if (!console){
+    var console = {};
+}
+if (!console.log){
+    console.log = function(){};
+}
+jQuery.fn.serializeObject = function() {
+     var o = {};
+     var a = this.serializeArray();
+     jQuery.each(a, function() {
+         if (o[this.name] !== undefined) {
+             if (!o[this.name].push) {
+                 o[this.name] = [o[this.name]];
+             }
+             o[this.name].push(this.value || '');
+         } else {
+             o[this.name] = this.value || '';
+         }
+     });
+     return o;
+};
 function enableAnnotations(){
     // todo check if logged in
     jQuery('[data-id]').waitForImages(function(){
@@ -202,7 +223,7 @@ function displayAnnotations(options){
                        }
                       ]
                     };
-                    console.log("New reply",newReply)
+                    
                     jQuery.ajax({
                         type: 'POST',
                         url: '/lorestore/oa/',
@@ -288,16 +309,7 @@ jQuery().ready(function(){
     var myUserId = jQuery('#metadata').data('userid');
     // attach handler to annotation search button
     jQuery('#annoSearchBtn').click(function(){
-        // search for annotations
-        var searchWhere = jQuery('#annoSearchWhere').val();
-        var searchTerm = jQuery('#annoInput').val();
-        var data = {
-            'asTriples': false,
-            'matchval': searchTerm
-        };
-        if (searchWhere == "creator") {
-            data.matchpred = "http://www.w3.org/ns/oa#annotatedBy";
-        }
+        var data = jQuery(this).closest('.form-search').serializeObject();
         // display annotation results
         displayAnnotationSearchResults(data);
     });

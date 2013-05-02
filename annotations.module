@@ -71,7 +71,7 @@ function annotations_menu() {
   return $items;
 }
 function annotations_display_title($title){
-    return 'Search Annotations by '.$title;
+    return 'Search Annotations by '.ucwords($title);
 }
 function annotations_toc() {
   $list[] = l("My Annotations","annotations/my-annotations");

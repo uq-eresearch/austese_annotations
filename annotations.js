@@ -57,6 +57,7 @@ function uuid() {
 };
 function displayAnnotations(options){
     var myUserId = jQuery('#metadata').data('userid');
+    var userAdmin = jQuery('#metadata').data('useradmin');
     // for each graph entry with type annotation
     var nodes = options.annos['@graph'];
     var count = 0;
@@ -125,7 +126,7 @@ function displayAnnotations(options){
             var result = "<div class='well white-well " + options.cls + "' data-annoid='" + node['@id'] + "'>"
                  + "<p class='pull-right'>"
                     + ((options.displayReplies && heading != 'Reply')? "<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-comment'/></a>" : "")
-                    + (myUserId == node.annotatedBy? 
+                    + (myUserId == node.annotatedBy || userAdmin? 
                         (//"&nbsp;&nbsp;<a title='Edit this annotation' class='annoEditBtn' href='javascript:void(0)'><i class='icon-pencil'/></a>"
                         //+ 
                         "&nbsp;&nbsp;<a title='Delete this annotation' class='annoDeleteBtn' href='javascript:void(0)'><i class='icon-remove'/></a>")
@@ -305,11 +306,45 @@ function displayAnnotationSearchResults(data){
     }); 
 }
 
-jQuery().ready(function(){
+function updatePager(page, numPages){
+    var startIndex = Math.max(0,page - 5);
+    var endIndex = Math.min(numPages, page+5);
+    if (page <= 5){
+        endIndex += (5 - page);
+        endIndex = Math.min(endIndex,numPages);
+    }
+    jQuery('#pager').empty();
+    if (startIndex > 0){
+      jQuery('#pager').append(jQuery("<li><a href='javascript:void(0)'>&laquo;</a></li>").click(function(){
+        //loadObjects(page-1);
+        console.log("load " + (page-1))
+     }));
+   }
+   for (i = startIndex; i < endIndex; i++){
+      jQuery('#pager').append("<li class='pagebtn" + (page == (i+1)? " active": "")+ "'><a href='javascript:void(0)'>" + (i + 1) + "</a></li>");
+   }
+   jQuery('.pagebtn').click(function(){
+       var pageNum = parseInt(jQuery(this).html() - 1);
+       //loadObjects(pageNum);
+       console.log("load " + pageNum)
+   });
+   if(numPages > endIndex){
+       jQuery('#pager').append(jQuery("<li><a href='javascript:void(0)'>&raquo;</a></li>").click(function(){
+          //loadObjects(page+1);
+        console.log("load " + (page+1))
+       }));
+   }
+}
+function loadAnnotations(page){
+    //var pageSize = 10;
     var myUserId = jQuery('#metadata').data('userid');
     // attach handler to annotation search button
     jQuery('#annoSearchBtn').click(function(){
         var data = jQuery(this).closest('.form-search').serializeObject();
+        
+        //data.offset = (page? page * pageSize : 0);
+        //data.limit = pageSize;
+        
         // display annotation results
         displayAnnotationSearchResults(data);
     });
@@ -320,8 +355,14 @@ jQuery().ready(function(){
                 'matchval': myUserId,
                 'matchpred': 'http://www.w3.org/ns/oa#annotatedBy'
         };
+        //data.offset = page? page * pageSize: 0;
+        //data.limit = pageSize;
         displayAnnotationSearchResults(data);
     }
+}
+
+jQuery().ready(function(){
+    loadAnnotations(0);
 });
 
 

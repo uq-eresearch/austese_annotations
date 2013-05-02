@@ -1,4 +1,7 @@
-<div id="metadata" data-op="search" data-userid="<?php global $user; print url('user/' . $user->uid, array('absolute' => TRUE)); ?>"></div>
+<div id="metadata" data-op="search" 
+  <?php if(user_access('administer site configuration')) { print "data-useradmin='true'";} ?> 
+  data-userid="<?php global $user; print url('user/' . $user->uid, array('absolute' => TRUE)); ?>">
+</div>
 <form class="form-search" action="javascript:void(0)">
 
    <!--   insert search for digital resources -->

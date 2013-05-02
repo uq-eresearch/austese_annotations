@@ -136,7 +136,7 @@ function displayAnnotations(options){
                  + (options.displayReplies? annotatesString : ""); 
             var body = lookup(nodes,node.hasBody);
             
-            if (body){
+            if (body && body.chars){
                 result += "<blockquote>" + body.chars + "</blockquote>";
             }
             

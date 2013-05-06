@@ -26,7 +26,44 @@ function enableAnnotations(){
           if (!el.annotationsEnabled){
               jQuery(el).annotator()
               .annotator('addPlugin','Image')
-              .annotator('addPlugin', 'Motivations')
+              .annotator('addPlugin', 'Motivations',{"motivations":[
+                  {
+                    value: "oa:Commenting",
+                    label: "Comment"
+                  },
+                  {
+                    value: "oa:Questioning",
+                    label: "Question"
+                  },
+                  {
+                    value: "austese:TextualNote",
+                    label: "Textual Note"
+                  },
+                  {
+                    value: "austese:ExplanatoryNote",
+                    label: "Explanatory Note"
+                  },
+                  {
+                    value: "austese:HistoricalNote",
+                    label: "Historical Note"
+                  },
+                  {
+                    value: "austese:BiographicalNote",
+                    label: "Biographical Note"
+                  },
+                  {
+                    value: "austese:Glossary",
+                    label: "Glossary"
+                  },
+                  {
+                    value: "austese:ClassicalAllusion",
+                    label: "Classical Allusion"
+                  },
+                  {
+                    value: "austese:BiblicalAllusion",
+                    label: "Biblical Allusion"
+                  }
+              ]})
               .annotator('addPlugin', 'Prov')
               .annotator('addPlugin','LoreStore');
               el.annotationsEnabled = true;

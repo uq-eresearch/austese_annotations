@@ -25,6 +25,9 @@ function enableAnnotations(){
       jQuery('[data-id]').each(function(i, el){
           if (!el.annotationsEnabled){
               jQuery(el).annotator()
+              .annotator('addPlugin','LoreStore')
+              .annotator('addPlugin', 'Prov')
+              .annotator('addPlugin', 'Reply')
               .annotator('addPlugin','Image')
               .annotator('addPlugin', 'Motivations',{"motivations":[
                   {
@@ -52,6 +55,10 @@ function enableAnnotations(){
                     label: "Biographical Note"
                   },
                   {
+                    value: "austese:GeographicalNote",
+                    label: "GeographicalNote"
+                  },
+                  {
                     value: "austese:Glossary",
                     label: "Glossary"
                   },
@@ -62,10 +69,16 @@ function enableAnnotations(){
                   {
                     value: "austese:BiblicalAllusion",
                     label: "Biblical Allusion"
+                  },
+                  {
+                    value: "oa:replying",
+                    label: "Reply"
+                  },
+                  {
+                    value: "oa:tagging",
+                    label: "Tag"
                   }
-              ]})
-              .annotator('addPlugin', 'Prov')
-              .annotator('addPlugin','LoreStore');
+              ]});
               el.annotationsEnabled = true;
           }
       });    

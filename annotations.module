@@ -134,6 +134,7 @@ function annotations_page_build(&$page) {
     drupal_add_js($modulePath . '/lib/annotator/annotator.image.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/annotator/annotator.motivations.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/annotator/annotator.prov.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/lib/annotator/annotator.reply.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/annotations.js', array('every_page' => TRUE));
   }
   

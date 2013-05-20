@@ -309,10 +309,12 @@ function displayAnnotations(options){
     } else {
         options.displayElement.parent().find('.reply-count').html("<small>" + (count==0?"No": count) + " repl" + (count==1?"y":"ies") + "</small>");
     }
-    jQuery('.annoShareBtn').on("click",function(){
+    jQuery('.annoShareBtn').off('click');
+    jQuery('.annoShareBtn').on("click",function(e){
         var container = jQuery(this).parent().parent();
-        container.find('.shareURL').toggle().find('input').select();
+        container.find('.shareURL:first').toggle().find('input').select();
     });
+    jQuery('.annoDeleteBtn').off('click')
     jQuery('.annoDeleteBtn').on('click', function(){
         // TODO warn if annotation has replies - replies are not deleted
         var container = jQuery(this).parent().parent()

@@ -29,7 +29,9 @@ function enableAnnotations(){
               .annotator('addPlugin', 'Prov')
               .annotator('addPlugin', 'Reply')
               .annotator('addPlugin','Image')
-              .annotator('addPlugin', 'Motivations',{"motivations":[
+              .annotator('addPlugin', 'Motivations',{
+                "showField": false, // will display via prov plugin field instead
+                "motivations":[
                   {
                     value: "oa:Commenting",
                     label: "Comment"
@@ -73,11 +75,11 @@ function enableAnnotations(){
                   {
                     value: "oa:replying",
                     label: "Reply"
-                  },
+                  }/*,
                   {
                     value: "oa:tagging",
                     label: "Tag"
-                  }
+                  }*/
               ]});
               el.annotationsEnabled = true;
           }

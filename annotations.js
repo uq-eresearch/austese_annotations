@@ -382,7 +382,7 @@ function displayById(id){
     }); 
 }
 function displayAnnotationSearchResults(data){
-    var feedUrl = '/lorestore/oa/?' + jQuery.param(data);
+    var feedUrl = '/lorestore/oa/feed/?' + jQuery.param(data);
     jQuery.ajax({
         type: 'GET',
         url: '/lorestore/oa/',
@@ -392,9 +392,11 @@ function displayAnnotationSearchResults(data){
             'Accept': 'application/json'
         },
         success: function(result){
+            if (data.annotates || data.matchval) {
             jQuery('#annoSearchResult')
                 .empty()
                 .append("<p><a target='_blank' title='Feed of matching Annotations' href='" + feedUrl + "'>Subscribe</a></p>")
+            }
             displayAnnotations({
                 annos: result, 
                 cls: 'anno',

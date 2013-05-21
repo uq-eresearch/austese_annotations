@@ -31,11 +31,11 @@ function enableAnnotations(){
 function enableAnnotationsOnElement(el) {
   if (!el.annotationsEnabled){
       jQuery(el).annotator({'bindToDocument': true})
-      .annotator('addPlugin','LoreStore')
-      .annotator('addPlugin', 'Prov')
-      .annotator('addPlugin', 'Reply')
       .annotator('addPlugin','Image')
+      .annotator('addPlugin', 'Prov')
       .annotator('addPlugin', 'CharRangeSelection')
+      .annotator('addPlugin','LoreStore')
+      .annotator('addPlugin', 'Reply')
       .annotator('addPlugin', 'Motivations',{
         "showField": false, // will display via prov plugin field instead
         "motivations":[
@@ -393,7 +393,7 @@ function displayAnnotationSearchResults(data){
         },
         success: function(result){
             if (data.annotates || data.matchval) {
-            jQuery('#annoSearchResult')
+              jQuery('#annoSearchResult')
                 .empty()
                 .append("<p><a target='_blank' title='Feed of matching Annotations' href='" + feedUrl + "'>Subscribe</a></p>")
             }

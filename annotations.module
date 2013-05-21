@@ -48,20 +48,75 @@ function annotations_permission() {
  */
 function annotations_menu() {
   // view annotation tool on a separate page
-  $items['annotations/tool'] = array(
-    'title' => 'Annotation Tool',
-    'page callback' => 'annotations_page',
+  $items['annotations'] = array(
+    'title' => 'Annotations',
+    'page callback' => 'annotations_toc',
+    'access arguments' => array('view annotations'),
+    'type' => MENU_CALLBACK
+  );
+  $items['annotations/my-annotations'] = array(
+    'title' => 'My Annotations',
+    'page callback' => 'annotations_mine',
+    'access arguments' => array('view annotations'),
+    'type' => MENU_CALLBACK
+  );
+  $items['annotations/search/%'] = array(
+    'title arguments' => array('title'=>2),
+    'title callback' => 'annotations_display_title',
+    'page callback' => 'annotations_search',
+    'page arguments' => array(2),
     'access arguments' => array('view annotations'),
     'type' => MENU_CALLBACK
   );
   return $items;
 }
-function annotations_page($resources=null) {
+function annotations_display_title($title){
+    return 'Search Annotations by '.ucwords($title);
+}
+function annotations_toc() {
+  $list[] = l("My Annotations","annotations/my-annotations");
+  $list[] = l("Search Annotations by Keyword","annotations/search/keyword");
+  $list[] = l("Search Annotations by Creator","annotations/search/creator");
+  $list[] = l("Search Annotations by Target","annotations/search/target");
+  $list[] = l("Search Annotations by Motivation","annotations/search/motivation");
+  #$list[] = l("Search Annotations by ID","annotations/search/id");
+  $render_array['repository_list'] = array(
+    '#theme' => 'item_list',  
+    '#items' => $list
+  );
+  return $render_array;
+}
+function annotations_search($searchtype='keyword') {
+  if (!in_array($searchtype,array("keyword","creator","target","motivation","id"))) {
+    drupal_access_denied();
+    return;
+  }
   $breadcrumb = array();
   $breadcrumb[] = l('Home', '<front>');
+  $breadcrumb[] = l('Annotations','annotations');
   $breadcrumb[] = t(drupal_get_title()); 
   drupal_set_breadcrumb($breadcrumb);
-  return theme('annotestpage',array('resources'=>$resources));
+  if ($searchtype == 'keyword') {
+      return theme('annosearch',array());
+  } else if ($searchtype == 'creator'){
+      return theme('annocreatorsearch', array());
+  } else if ($searchtype == 'target'){
+      return theme('annotargetsearch', array());
+  } else if ($searchtype == 'motivation'){
+      return theme('annomotivationsearch',array());
+  } else if ($searchtype == 'id'){
+      return theme('annoidsearch',array());
+  }
+  return theme('annosearch', array());
+}
+
+function annotations_mine() {
+  $breadcrumb = array();
+  $breadcrumb[] = l('Home', '<front>');
+  $breadcrumb[] = l('Annotations','annotations');
+  $breadcrumb[] = t(drupal_get_title()); 
+  drupal_set_breadcrumb($breadcrumb);
+  return theme('myannos',array());
 }
 # insert annotation scripts into all pages, as long as user is logged in (for now until we implement auth support)
 function annotations_page_build(&$page) {
@@ -70,6 +125,7 @@ function annotations_page_build(&$page) {
     $modulePath = drupal_get_path('module', 'annotations');
     drupal_add_css($modulePath . '/lib/css/imgareaselect-default.css', array('every_page' => TRUE));
     drupal_add_css($modulePath . '/lib/annotator/annotator.min.css', array('every_page' => TRUE));
+    drupal_add_css($modulePath . '/annotations.css', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/scripts/jquery.timeago.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/scripts/jquery.ba-resize.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/scripts/jquery.waitforimages.min.js', array('every_page' => TRUE));
@@ -82,6 +138,7 @@ function annotations_page_build(&$page) {
     drupal_add_js($modulePath . '/lib/annotator/annotator.image.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/annotator/annotator.motivations.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/annotator/annotator.prov.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/lib/annotator/annotator.reply.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/annotations.js', array('every_page' => TRUE));
   }
   
@@ -89,9 +146,29 @@ function annotations_page_build(&$page) {
 
 function annotations_theme(){
  return array(
-    'annotestpage' => array(
+    'annosearch' => array(
+       'template' => 'annosearch',
+       'variables' => array()
+     ),
+     'annocreatorsearch' => array(
+       'template' => 'annocreatorsearch',
+       'variables' => array()
+     ),
+     'annotargetsearch' => array(
+       'template' => 'annotargetsearch',
+       'variables' => array()
+     ),
+     'annomotivationsearch' => array(
+       'template' => 'annomotivationsearch',
+       'variables' => array()
+     ),
+     'annoidsearch' => array (
+       'template' => 'annoidsearch',
+       'variables' => array()
+     ),
+     'myannos' => array(
        'template' => 'annotationspage',
-       'variables' => array('resources'=> null)
+       'variables' => array()
      )
  );
 }

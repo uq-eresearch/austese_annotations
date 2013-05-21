@@ -1,5 +1,6 @@
 .annoEditBtn, .annoReplyBtn, .annoDeleteBtn, .annoShareBtn {opacity: 0.2}
 .annoEditBtn:hover, .annoReplyBtn:hover, .annoDeleteBtn:hover, .annoShareBtn:hover {opacity:1.0}
 .anno , .reply, .replyEditor {padding:10px !important; margin:5px !important;}
+.icon-reply {background-image:url("reply.png") !important ; background-position:0px 0px !important;}
 .reply-count:before {content: "▿ "}
 .collapsed:before {content:"▹ "}

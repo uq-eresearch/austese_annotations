@@ -183,13 +183,15 @@ function displayAnnotations(options){
             
             var result = "<div" + (node.annotatedAt? " data-timestamp='" + node.annotatedAt['@value'] + "'": "") + " class='well white-well " + options.cls + "' data-annoid='" + node['@id'] + "'>"
                  + "<p class='pull-right'>"
-                    + ((options.displayReplies && heading != 'Reply')? "<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-comment'/></a>" : "")
+                    
                     + (myUserId == node.annotatedBy || userAdmin? 
                         (//"&nbsp;&nbsp;<a title='Edit this annotation' class='annoEditBtn' href='javascript:void(0)'><i class='icon-pencil'/></a>"
                         //+ 
                         "&nbsp;&nbsp;<a title='Delete this annotation' class='annoDeleteBtn' href='javascript:void(0)'><i class='icon-remove'/></a>")
                         : "")
-                    + "&nbsp;&nbsp;<a title='Share link to this annotation' class='annoShareBtn' href='javascript:void(0)'><i class='icon-share'/></a></p>"
+                    + "&nbsp;&nbsp;<a title='Share link to this annotation' class='annoShareBtn' href='javascript:void(0)'><i class='icon-share'/></a>"
+                    + ((options.displayReplies && heading != 'Reply')? "&nbsp;&nbsp;<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-reply'/></a>" : "")
+                    +"</p>"
                  + (options.displayReplies? "<h4>" + heading + "</h4>" : "")
                  + "<p><small>" + creatorString + "<a href='" + node['@id'] + "'>" + createdString + "</a></small></p>"
                  + (options.displayReplies? annotatesString : ""); 

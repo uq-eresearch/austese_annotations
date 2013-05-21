@@ -7,10 +7,10 @@
    <!--   insert search for digital resources -->
    <select class="input-xlarge" id="annoInput" name="matchval">
    <?php $query = db_select('users', 'u');
-    $query->fields('u', array('name', 'uid'));
+    $query->fields('u', array('name', 'uid', 'login'));
     $result = $query->execute();
     while($record = $result->fetchAssoc()) {
-       if ($record['uid'] != 0) {
+       if ($record['uid'] != 0 && $record['login']!=0) {
          print_r('<option value="' 
            . url('user/' . $record['uid'], array('absolute' => TRUE)) 
            . '">'. $record['name'] . '</option>');

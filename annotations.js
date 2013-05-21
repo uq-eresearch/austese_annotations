@@ -125,7 +125,8 @@ function displayAnnotations(options){
             var creator = lookup(nodes, node.annotatedBy);
             var creatorString = "";
             if (creator) {
-                creatorString = "by <a href='" + node.annotatedBy + "'>" + creator.name + "</a>, ";
+                console.log("creator is ",creator)
+                creatorString = "by <a href='" + node.annotatedBy + "'>" + (creator.name || creator['foaf:name']) + "</a>, ";
             }
             var heading="Annotation";
             // TODO look up motivations rather than hardcode them here

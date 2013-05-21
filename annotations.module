@@ -79,6 +79,7 @@ function annotations_toc() {
   $list[] = l("Search Annotations by Creator","annotations/search/creator");
   $list[] = l("Search Annotations by Target","annotations/search/target");
   $list[] = l("Search Annotations by Motivation","annotations/search/motivation");
+  #$list[] = l("Search Annotations by ID","annotations/search/id");
   $render_array['repository_list'] = array(
     '#theme' => 'item_list',  
     '#items' => $list
@@ -86,7 +87,7 @@ function annotations_toc() {
   return $render_array;
 }
 function annotations_search($searchtype='keyword') {
-  if (!in_array($searchtype,array("keyword","creator","target","motivation"))) {
+  if (!in_array($searchtype,array("keyword","creator","target","motivation","id"))) {
     drupal_access_denied();
     return;
   }
@@ -103,6 +104,8 @@ function annotations_search($searchtype='keyword') {
       return theme('annotargetsearch', array());
   } else if ($searchtype == 'motivation'){
       return theme('annomotivationsearch',array());
+  } else if ($searchtype == 'id'){
+      return theme('annoidsearch',array());
   }
   return theme('annosearch', array());
 }
@@ -156,6 +159,10 @@ function annotations_theme(){
      ),
      'annomotivationsearch' => array(
        'template' => 'annomotivationsearch',
+       'variables' => array()
+     ),
+     'annoidsearch' => array (
+       'template' => 'annoidsearch',
        'variables' => array()
      ),
      'myannos' => array(

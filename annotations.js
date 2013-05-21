@@ -19,6 +19,7 @@ jQuery.fn.serializeObject = function() {
      });
      return o;
 };
+
 function enableAnnotations(){
     // todo check if logged in
     jQuery('[data-id]').waitForImages(function(){
@@ -113,6 +114,7 @@ function displayAnnotations(options){
     // for each graph entry with type annotation
     var nodes = options.annos['@graph'];
     var count = 0;
+    var tempElement = jQuery("<div></div>");
     jQuery.each(nodes,function(index, node){
         var type = node['@type'];
         if (type && type == "oa:Annotation"){
@@ -157,7 +159,7 @@ function displayAnnotations(options){
                 // annotates specific target
                 var st = lookup(nodes, node.hasTarget);
                 if (st){
-                    annotatesString += "<p>Annotates <span data-targeturi='" + st.hasSource + "'>" + st.hasSource + "</span></p>";
+                    annotatesString += "<p>Annotates <span data-targeturi='" + st.hasSource + "'><a href='" + st.hasSource + "'>" + st.hasSource +"</a></span></p>";
                     var selector = lookup(nodes,st.hasSelector);
                     if (selector && selector['@type']=='oa:Choice'){
                         // text selector
@@ -175,7 +177,7 @@ function displayAnnotations(options){
                 annotatesString = "<p>Annotates <span data-targeturi='" + hasTarget + "'><a href='" + hasTarget + "'>" + hasTarget + "</a></span></p>";
             }
             
-            var result = "<div class='well white-well " + options.cls + "' data-annoid='" + node['@id'] + "'>"
+            var result = "<div" + (node.annotatedAt? " data-timestamp='" + node.annotatedAt['@value'] + "'": "") + " class='well white-well " + options.cls + "' data-annoid='" + node['@id'] + "'>"
                  + "<p class='pull-right'>"
                     + ((options.displayReplies && heading != 'Reply')? "<a title='Reply to this annotation' class='annoReplyBtn' href='javascript:void(0)'><i class='icon-comment'/></a>" : "")
                     + (myUserId == node.annotatedBy || userAdmin? 
@@ -199,10 +201,28 @@ function displayAnnotations(options){
             }
             
             result += "</div>";
-            options.displayElement.append(result);
+            tempElement.append(result);
         }
         
     }); // end each
+    var resultElems = tempElement.children('div').sort(function(a,b){
+        var tsa = jQuery(a).data('timestamp');
+        var tsb = jQuery(b).data('timestamp');
+        var tempDate = new Date();
+        if (!tsb) {
+            tsb = tempDate;
+        } else {
+            tsb = new Date(tsb);
+        }
+        if (!tsa) {
+            tsa = tempDate;
+        } else {
+            tsa = new Date(tsa);
+        }
+        //console.log("is " + tsa + " greater than " + tsb,tsa > tsb)
+        return tsa > tsb;
+    });
+    options.displayElement.append(resultElems);
     // TODO update placeholders for targets with further ajax requests
     if (options.displayReplies) {
         jQuery('.replies').each(function(i,el){
@@ -335,6 +355,25 @@ function displayAnnotations(options){
             }
         });
     });
+
+}
+function displayById(id){
+    jQuery.ajax({
+        type: 'GET',
+        url: id,
+        dataType: "json",
+        headers: {
+            'Accept': 'application/json'
+        },
+        success: function(result){
+            displayAnnotations({
+                annos: result, 
+                cls: 'anno',
+                displayReplies: true, 
+                displayElement: jQuery('#annoSearchResult')
+            });
+        }
+    }); 
 }
 function displayAnnotationSearchResults(data){
     var feedUrl = '/lorestore/oa/?' + jQuery.param(data);
@@ -412,6 +451,13 @@ function loadAnnotations(page){
         //data.offset = page? page * pageSize: 0;
         //data.limit = pageSize;
         displayAnnotationSearchResults(data);
+    }
+    if (jQuery('#metadata').data('op') == 'id') {
+        // display an annotation by id for the id search page
+        var id = jQuery('#metadata').data('annoid');
+        if (id){
+            displayById(id);
+        }
     }
 }
 

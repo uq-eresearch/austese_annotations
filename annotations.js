@@ -122,6 +122,9 @@ function displayAnnotations(options){
     var nodes = options.annos['@graph'];
     var count = 0;
     var tempElement = jQuery("<div></div>");
+    if (nodes.length == 0 && options.displayReplies){
+        options.displayElement.html("No results");
+    }
     jQuery.each(nodes,function(index, node){
         var type = node['@type'];
         if (type && type == "oa:Annotation"){

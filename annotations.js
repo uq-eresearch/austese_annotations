@@ -80,6 +80,10 @@ function enableAnnotationsOnElement(el) {
             label: "Biblical Allusion"
           },
           {
+            value: "austese:PerformanceNote",
+            label: "Performance Note"
+          },
+          {
             value: "oa:replying",
             label: "Reply"
           }/*,

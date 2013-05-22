@@ -399,11 +399,11 @@ function displayAnnotationSearchResults(data){
             'Accept': 'application/json'
         },
         success: function(result){
-            if (data.annotates || data.matchval) {
+            /*if (data.annotates || data.matchval) {
               jQuery('#annoSearchResult')
                 .empty()
                 .append("<p><a target='_blank' title='Feed of matching Annotations' href='" + feedUrl + "'>Subscribe</a></p>")
-            }
+            }*/
             displayAnnotations({
                 annos: result, 
                 cls: 'anno',

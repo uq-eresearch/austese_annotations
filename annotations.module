@@ -133,6 +133,7 @@ function annotations_page_build(&$page) {
     drupal_add_js($modulePath . '/lib/scripts/jquery.ba-resize.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/scripts/jquery.waitforimages.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/scripts/jquery.imgareaselect.min.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/lib/scripts/jquery.hoverIntent.r7.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/annotator/annotator.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib/annotator/annotator.tags.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/lib//annotator/annotator.permissions.min.js', array('every_page' => TRUE));

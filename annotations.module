@@ -75,7 +75,8 @@ function annotations_display_title($title){
 }
 function annotations_toc() {
   $list[] = l("My Annotations","annotations/my-annotations");
-  $list[] = l("Search Annotations by Keyword","annotations/search/keyword");
+  $list[] = l("Search Annotations by Keyword (anywhere in annotation)","annotations/search/keyword");
+  $list[] = l("Search Annotations by Keyword (within body only)","annotations/search/body");
   $list[] = l("Search Annotations by Creator","annotations/search/creator");
   $list[] = l("Search Annotations by Target","annotations/search/target");
   $list[] = l("Search Annotations by Motivation","annotations/search/motivation");
@@ -87,7 +88,7 @@ function annotations_toc() {
   return $render_array;
 }
 function annotations_search($searchtype='keyword') {
-  if (!in_array($searchtype,array("keyword","creator","target","motivation","id"))) {
+  if (!in_array($searchtype,array("keyword","body","creator","target","motivation","id"))) {
     drupal_access_denied();
     return;
   }
@@ -98,6 +99,8 @@ function annotations_search($searchtype='keyword') {
   drupal_set_breadcrumb($breadcrumb);
   if ($searchtype == 'keyword') {
       return theme('annosearch',array());
+  } else if ($searchtype == 'body'){
+      return theme('annobodysearch', array());
   } else if ($searchtype == 'creator'){
       return theme('annocreatorsearch', array());
   } else if ($searchtype == 'target'){
@@ -149,6 +152,10 @@ function annotations_theme(){
     'annosearch' => array(
        'template' => 'annosearch',
        'variables' => array()
+     ),
+     'annobodysearch' => array(
+        'template' => 'annobodysearch',
+        'variables' => array()
      ),
      'annocreatorsearch' => array(
        'template' => 'annocreatorsearch',

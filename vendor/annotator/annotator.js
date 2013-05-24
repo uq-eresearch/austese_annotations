@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-634feee
+** Annotator 1.2.6-dev-9138e7d
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-05-23 02:51:02Z
+** Built at: 2013-05-24 01:10:00Z
 */
 
 (function() {
@@ -14,7 +14,8 @@
     __slice = Array.prototype.slice,
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   gettext = null;
 
@@ -1069,10 +1070,13 @@
     };
 
     Annotator.prototype.onHighlightMouseover = function(event) {
-      var annotations, appendTo;
+      var annotations, appendTo, _ref2;
       this.clearViewerHideTimer();
       if (this.mouseIsDown) return false;
       if (this.viewer.isShown() && !($.fn.hoverIntent != null)) return false;
+      if (this.editor.isShown() && (_ref2 = event.target, __indexOf.call(this.editor.annotation.highlights, _ref2) >= 0)) {
+        return false;
+      }
       annotations = $(event.target).parents('.annotator-hl').andSelf().map(function() {
         return $(this).data("annotation");
       });
@@ -1317,6 +1321,10 @@
       this.element.find(":input:first").focus();
       this.setupDraggables();
       return this.publish('show');
+    };
+
+    Editor.prototype.isShown = function() {
+      return !this.element.hasClass(this.classes.hide);
     };
 
     Editor.prototype.hide = function(event) {

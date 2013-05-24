@@ -126,23 +126,24 @@ function annotations_page_build(&$page) {
   global $user;
   if ($user->uid) {
     $modulePath = drupal_get_path('module', 'annotations');
-    drupal_add_css($modulePath . '/lib/css/imgareaselect-default.css', array('every_page' => TRUE));
-    drupal_add_css($modulePath . '/lib/annotator/annotator.min.css', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/scripts/json3.min.js', array('every_page' => TRUE));
+    drupal_add_css($modulePath . '/vendor/css/imgareaselect-default.css', array('every_page' => TRUE));
+    drupal_add_css($modulePath . '/vendor/annotator/annotator.min.css', array('every_page' => TRUE));
     drupal_add_css($modulePath . '/annotations.css', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/scripts/jquery.timeago.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/scripts/jquery.ba-resize.min.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/scripts/jquery.waitforimages.min.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/scripts/jquery.imgareaselect.min.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/scripts/jquery.hoverIntent.r7.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/annotator/annotator.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/annotator/annotator.tags.min.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib//annotator/annotator.permissions.min.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib//annotator/annotator.charrangeselection.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/annotator/annotator.lorestore.js',array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/annotator/annotator.image.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/annotator/annotator.motivations.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/annotator/annotator.prov.js', array('every_page' => TRUE));
-    drupal_add_js($modulePath . '/lib/annotator/annotator.reply.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/scripts/jquery.timeago.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/scripts/jquery.ba-resize.min.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/scripts/jquery.waitforimages.min.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/scripts/jquery.imgareaselect.min.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/scripts/jquery.hoverIntent.r7.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.tags.min.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.permissions.min.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.charrangeselection.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.lorestore.js',array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.image.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.motivations.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.prov.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.reply.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/annotations.js', array('every_page' => TRUE));
   }
   

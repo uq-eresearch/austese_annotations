@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-9138e7d
+** Annotator 1.2.6-dev-24fc0c5
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-05-24 01:10:00Z
+** Built at: 2013-07-05 07:01:34Z
 */
 
 (function() {
@@ -904,17 +904,23 @@
       return annotation;
     };
 
-    Annotator.prototype.deleteAnnotation = function(annotation) {
-      var h, _k, _len3, _ref2;
+    Annotator.prototype.hideAnnotation = function(annotation) {
+      var h, _k, _len3, _ref2, _results;
       if (annotation.removeMarkers != null) {
-        annotation.removeMarkers();
+        return annotation.removeMarkers();
       } else {
         _ref2 = annotation.highlights;
+        _results = [];
         for (_k = 0, _len3 = _ref2.length; _k < _len3; _k++) {
           h = _ref2[_k];
-          $(h).replaceWith(h.childNodes);
+          _results.push($(h).replaceWith(h.childNodes));
         }
+        return _results;
       }
+    };
+
+    Annotator.prototype.deleteAnnotation = function(annotation) {
+      this.hideAnnotation(annotation);
       this.publish('annotationDeleted', [annotation]);
       return annotation;
     };

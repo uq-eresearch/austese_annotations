@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-634feee
+** Annotator 1.2.6-dev-24fc0c5
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-05-23 05:13:00Z
+** Built at: 2013-07-05 07:01:30Z
 */
 
 (function() {
@@ -49,6 +49,18 @@
       this._getAnnotations = __bind(this._getAnnotations, this);      LoreStore.__super__.constructor.apply(this, arguments);
       this.annotations = [];
     }
+
+    LoreStore.prototype.destroy = function() {
+      var annotation, _i, _len, _ref, _results;
+      LoreStore.__super__.destroy.call(this);
+      _ref = this.annotations;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        annotation = _ref[_i];
+        _results.push(this.annotator.hideAnnotation(annotation));
+      }
+      return _results;
+    };
 
     LoreStore.prototype.pluginInit = function() {
       if (!Annotator.supported()) return;

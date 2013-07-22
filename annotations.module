@@ -35,6 +35,10 @@ function annotations_permission() {
     'view annotations' => array(
       'title' => t('View annotations'),
       'description' => t('Allow users to view annotations'),
+    ), 
+    'edit annotations' => array(
+      'title' => t('Edit annotations'),
+      'description' => t('Allow users to edit annotations')
     )
   );
 }

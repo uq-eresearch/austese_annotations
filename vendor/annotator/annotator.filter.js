@@ -64,10 +64,10 @@
       this._onFilterFocus = __bind(this._onFilterFocus, this);
       this.updateHighlights = __bind(this.updateHighlights, this);
       var _base;
-      element = $(this.html.element).appendTo((options != null ? options.appendTo : void 0) || this.options.appendTo);
+      element = Annotator.$(this.html.element).appendTo((options != null ? options.appendTo : void 0) || this.options.appendTo);
       Filter.__super__.constructor.call(this, element, options);
       (_base = this.options).filters || (_base.filters = []);
-      this.filter = $(this.html.filter);
+      this.filter = Annotator.$(this.html.filter);
       this.filters = [];
       this.current = 0;
     }
@@ -91,7 +91,7 @@
 
     Filter.prototype._insertSpacer = function() {
       var currentMargin, html;
-      html = $('html');
+      html = Annotator.$('html');
       currentMargin = parseInt(html.css('padding-top'), 10) || 0;
       html.css('padding-top', currentMargin + this.element.outerHeight());
       return this;
@@ -109,7 +109,7 @@
 
     Filter.prototype.addFilter = function(options) {
       var f, filter;
-      filter = $.extend({
+      filter = Annotator.$.extend({
         label: '',
         property: '',
         isFiltered: this.options.isFiltered
@@ -144,12 +144,12 @@
       filter.annotations = [];
       this.updateHighlights();
       this.resetHighlights();
-      input = $.trim(filter.element.find('input').val());
+      input = Annotator.$.trim(filter.element.find('input').val());
       if (input) {
         annotations = this.highlights.map(function() {
-          return $(this).data('annotation');
+          return Annotator.$(this).data('annotation');
         });
-        _ref = $.makeArray(annotations);
+        _ref = Annotator.$.makeArray(annotations);
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           annotation = _ref[_i];
           property = annotation[filter.property];
@@ -168,19 +168,19 @@
 
     Filter.prototype.filterHighlights = function() {
       var activeFilters, annotation, annotations, filtered, highlights, index, uniques, _len, _ref;
-      activeFilters = $.grep(this.filters, function(filter) {
+      activeFilters = Annotator.$.grep(this.filters, function(filter) {
         return !!filter.annotations.length;
       });
       filtered = ((_ref = activeFilters[0]) != null ? _ref.annotations : void 0) || [];
       if (activeFilters.length > 1) {
         annotations = [];
-        $.each(activeFilters, function() {
-          return $.merge(annotations, this.annotations);
+        Annotator.$.each(activeFilters, function() {
+          return Annotator.$.merge(annotations, this.annotations);
         });
         uniques = [];
         filtered = [];
-        $.each(annotations, function() {
-          if ($.inArray(this, uniques) === -1) {
+        Annotator.$.each(annotations, function() {
+          if (Annotator.$.inArray(this, uniques) === -1) {
             return uniques.push(this);
           } else {
             return filtered.push(this);
@@ -205,7 +205,7 @@
 
     Filter.prototype._onFilterFocus = function(event) {
       var input;
-      input = $(event.target);
+      input = Annotator.$(event.target);
       input.parent().addClass(this.classes.active);
       return input.next('button').show();
     };
@@ -213,7 +213,7 @@
     Filter.prototype._onFilterBlur = function(event) {
       var input;
       if (!event.target.value) {
-        input = $(event.target);
+        input = Annotator.$(event.target);
         input.parent().removeClass(this.classes.active);
         return input.next('button').hide();
       }
@@ -221,7 +221,7 @@
 
     Filter.prototype._onFilterKeyup = function(event) {
       var filter;
-      filter = $(event.target).parent().data('filter');
+      filter = Annotator.$(event.target).parent().data('filter');
       if (filter) return this.updateFilter(filter);
     };
 
@@ -250,16 +250,16 @@
     };
 
     Filter.prototype._scrollToHighlight = function(highlight) {
-      highlight = $(highlight);
+      highlight = Annotator.$(highlight);
       this.highlights.removeClass(this.classes.hl.active);
       highlight.addClass(this.classes.hl.active);
-      return $('html, body').animate({
+      return Annotator.$('html, body').animate({
         scrollTop: highlight.offset().top - (this.element.height() + 20)
       }, 150);
     };
 
     Filter.prototype._onClearClick = function(event) {
-      return $(event.target).prev('input').val('').keyup().blur();
+      return Annotator.$(event.target).prev('input').val('').keyup().blur();
     };
 
     return Filter;

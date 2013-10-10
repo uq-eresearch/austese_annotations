@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-30b6543
+** Annotator 1.2.6-dev-24fc0c5
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-05-21 00:13:12Z
+** Built at: 2013-10-10 05:58:48Z
 */
 
 (function() {
@@ -143,7 +143,6 @@
       selection = annotation.relativeSelection;
       marker.css({
         position: 'absolute',
-        border: this.borderWidth + 'px solid ' + this.borderColour,
         zIndex: 1000
       }).offset({
         left: imgPosition.left + (selection.x1 * image.width) + this.borderWidth,

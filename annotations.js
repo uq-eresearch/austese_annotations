@@ -254,7 +254,7 @@ function displayAnnotations(options){
                 },
                 success: function(result){
                     // collapsible element that displays replies
-                    jQuery(el).append('<p data-toggle="collapse" data-target="#r' + i + '-replies" class="reply-count collapsed"></p>');
+                    jQuery(el).append('<p data-toggle="collapse" data-target="#r' + i + '-replies" class="reply-count anno-collapsed"></p>');
                     var repliesEl = jQuery('<div class="replies-collapse collapse in" id="r' + i + '-replies"></div>');
                     jQuery(el).append(repliesEl);
                     repliesEl.collapse();

@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-8985f8d
+** Annotator 1.2.6-dev-2ebcdb8
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-05-22 00:59:18Z
+** Built at: 2013-10-16 05:36:47Z
 */
 
 (function() {
@@ -98,9 +98,11 @@
   })(Annotator.Plugin);
 
   CharRange = (function() {
-    var TEXT_NODE;
+    var DOM_ANNOTATOR_IGNORE_ATTRIBUTE, TEXT_NODE;
 
     function CharRange() {}
+
+    DOM_ANNOTATOR_IGNORE_ATTRIBUTE = 'annotator_ignore';
 
     TEXT_NODE = 3;
 
@@ -127,6 +129,9 @@
       offsets = {};
       charCount = 0;
       findOffsets = function(currNode) {
+        if (typeof currNode.hasAttribute === "function" ? currNode.hasAttribute(DOM_ANNOTATOR_IGNORE_ATTRIBUTE) : void 0) {
+          return false;
+        }
         if (currNode.nodeType === TEXT_NODE) {
           if (currNode === range.start) offsets.start = charCount;
           if (currNode === range.end) {
@@ -147,6 +152,9 @@
       range = document.createRange();
       findRange = function(currNode) {
         var length, offset;
+        if (typeof currNode.hasAttribute === "function" ? currNode.hasAttribute(DOM_ANNOTATOR_IGNORE_ATTRIBUTE) : void 0) {
+          return false;
+        }
         if (currNode.nodeType === TEXT_NODE) {
           length = cleanText(currNode.textContent).length;
           if (length + charCount > startOffset && charCount <= startOffset) {
@@ -205,8 +213,9 @@
   removeCharsGlobal = /[\n\s]/g;
 
   walkDom = function(node, func) {
-    var _results;
-    func(node);
+    var returnVal, _results;
+    returnVal = func(node);
+    if (returnVal === false) return;
     node = node.firstChild;
     _results = [];
     while (node) {

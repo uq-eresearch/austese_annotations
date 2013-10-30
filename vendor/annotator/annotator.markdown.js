@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-096f1b0
+** Annotator 1.2.6-dev-3a52dd3
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-04-16 05:25:01Z
+** Built at: 2013-10-30 05:04:42Z
 */
 
 (function() {
@@ -38,7 +38,11 @@
     };
 
     Markdown.prototype.convert = function(text) {
-      return this.converter.makeHtml(text);
+      return this.converter.makeHtml(this.htmlDecode(text));
+    };
+
+    Markdown.prototype.htmlDecode = function(value) {
+      return Annotator.$('<div/>').html(value).text();
     };
 
     return Markdown;

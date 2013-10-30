@@ -17,7 +17,10 @@
 .annotator-viewer div:first-of-type, .annotator-editor .annotator-item:first-child textarea {
     font-style:normal;
 }
-.annobody p {
+.annotator-item blockquote {
+    margin-top:3px; margin-bottom:3px; padding:2px;
+}
+.annobody p, .annotator-item p {
     font-size:100%;
 }
 

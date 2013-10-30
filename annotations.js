@@ -19,6 +19,12 @@ jQuery.fn.serializeObject = function() {
      });
      return o;
 };
+// override keypress in annotator editor so that enter does not cause save
+Annotator.Editor.prototype.processKeypress = function (event) {
+    if (event.keyCode == 27) {
+      this.hide()
+    }
+}
 var converter = new Showdown.converter();
 function enableAnnotations(){
     // todo check if logged in

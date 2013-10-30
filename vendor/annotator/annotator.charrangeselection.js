@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-2ebcdb8
+** Annotator 1.2.6-dev-7acde3d
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-10-16 05:36:47Z
+** Built at: 2013-10-30 05:00:32Z
 */
 
 (function() {
@@ -155,6 +155,7 @@
         if (typeof currNode.hasAttribute === "function" ? currNode.hasAttribute(DOM_ANNOTATOR_IGNORE_ATTRIBUTE) : void 0) {
           return false;
         }
+        if (range.endContainer !== document) return false;
         if (currNode.nodeType === TEXT_NODE) {
           length = cleanText(currNode.textContent).length;
           if (length + charCount > startOffset && charCount <= startOffset) {

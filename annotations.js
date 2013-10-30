@@ -19,7 +19,7 @@ jQuery.fn.serializeObject = function() {
      });
      return o;
 };
-
+var converter = new Showdown.converter();
 function enableAnnotations(){
     // todo check if logged in
     jQuery('[data-id]').waitForImages(function(){
@@ -91,7 +91,10 @@ function enableAnnotationsOnElement(el) {
             value: "oa:tagging",
             label: "Tag"
           }*/
-      ]});
+      ]})
+      .annotator('addPlugin', 'Markdown')
+      
+      ;
       el.annotationsEnabled = true;
   }
 }
@@ -205,7 +208,7 @@ function displayAnnotations(options){
             var body = lookup(nodes,node.hasBody);
             
             if (body && body.chars){
-                result += "<blockquote>" + body.chars + "</blockquote>";
+                result += "<blockquote class='annobody'>" + converter.makeHtml(body.chars) + "</blockquote>";
             }
             
             result += "<p style='display:none' class='shareURL'><input style='cursor:text' title='Copy unique identifier for this Annotation' name='annoId' type='text' class='input-xxlarge' readonly value='" + node['@id'] + "'/>";

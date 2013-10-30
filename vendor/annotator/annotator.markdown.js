@@ -34,7 +34,7 @@
     Markdown.prototype.updateTextField = function(field, annotation) {
       var text;
       text = Annotator.$.escape(annotation.text || '');
-      return $(field).html(this.convert(text));
+      return Annotator.$(field).html(this.convert(text));
     };
 
     Markdown.prototype.convert = function(text) {

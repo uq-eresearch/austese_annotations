@@ -14,3 +14,9 @@
 .annotator-hl.annotator-image.annotator-hl-filtered {
     border: none;
 }
+.annotator-viewer div:first-of-type, .annotator-editor .annotator-item:first-child textarea {
+    font-style:normal;
+}
+.annobody p {
+    font-size:100%;
+}

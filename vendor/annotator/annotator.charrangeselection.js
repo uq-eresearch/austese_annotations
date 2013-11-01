@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-7acde3d
+** Annotator 1.2.6-dev-8dda58d
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-10-30 05:00:32Z
+** Built at: 2013-11-01 05:00:59Z
 */
 
 (function() {
@@ -80,8 +80,8 @@
         end: annotation.endOffset
       };
       range = new CharRange().rangeFromCharOffsets(head, offsets);
-      selectedText = range.toString().trim();
-      if ((annotation.originalQuote != null) && annotation.originalQuote !== selectedText) {
+      selectedText = range.toString().replace(/\s+/g, ' ').trim();
+      if ((annotation.originalQuote != null) && annotation.originalQuote.replace(/\s+/g, ' ').trim() !== selectedText) {
         console.log("PANIC: annotation is attached incorrectly. Should be: '" + annotation.originalQuote + "'. But is: '" + selectedText + "'", {
           range: range,
           annotation: annotation
@@ -155,7 +155,7 @@
         if (typeof currNode.hasAttribute === "function" ? currNode.hasAttribute(DOM_ANNOTATOR_IGNORE_ATTRIBUTE) : void 0) {
           return false;
         }
-        if (range.endContainer !== document) return false;
+        if (charCount === endOffset) return false;
         if (currNode.nodeType === TEXT_NODE) {
           length = cleanText(currNode.textContent).length;
           if (length + charCount > startOffset && charCount <= startOffset) {

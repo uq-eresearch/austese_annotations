@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-24fc0c5
+** Annotator 1.2.6-dev-58d2cf3
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-10-10 05:58:48Z
+** Built at: 2013-11-08 00:14:05Z
 */
 
 (function() {
@@ -44,6 +44,12 @@
       jQuery(this.element).find('img').resize(this._onWindowResized);
       this.annotator.addAnnotationPlugin(this);
       return this._setupListeners();
+    };
+
+    Image.prototype.destroy = function() {
+      return this.element.find('img').imgAreaSelect({
+        remove: true
+      });
     };
 
     Image.prototype._onWindowResized = function() {

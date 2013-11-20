@@ -146,6 +146,7 @@ function annotations_page_build(&$page) {
     drupal_add_js($modulePath . '/vendor/annotator/annotator.lorestore.js',array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.image.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.motivations.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.filter.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.prov.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.reply.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/scripts/showdown.js', array('every_page' => TRUE));

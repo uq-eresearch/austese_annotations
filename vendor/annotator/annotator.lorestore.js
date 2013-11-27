@@ -1,12 +1,12 @@
 /*
-** Annotator 1.2.6-dev-24fc0c5
+** Annotator 1.2.6-dev-aa0605b
 ** https://github.com/okfn/annotator/
 **
 ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
 ** Dual licensed under the MIT and GPLv3 licenses.
 ** https://github.com/okfn/annotator/blob/master/LICENSE
 **
-** Built at: 2013-07-05 07:01:30Z
+** Built at: 2013-11-26 06:36:46Z
 */
 
 (function() {
@@ -151,13 +151,33 @@
     };
 
     LoreStore.prototype.mapAnnotations = function(data) {
-      var anno, annos, annotations, body, creator, id, image, processSelector, selectiondata, selector, selectors, target, targetsel, tempanno, textQuoteSelector, _i, _j, _len, _len2;
+      var anno, annos, annotations, b, body, creator, id, image, processSelector, selectiondata, selector, selectors, tags, target, targetsel, tempanno, textQuoteSelector, _fn, _i, _j, _k, _len, _len2, _len3, _ref,
+        _this = this;
       if (data == null) data = {};
       annotations = [];
       annos = this._findAnnos(data['@graph']);
       for (_i = 0, _len = annos.length; _i < _len; _i++) {
         anno = annos[_i];
-        body = this._findById(data['@graph'], anno.hasBody);
+        tags = [];
+        body = {};
+        if (typeof anno.hasBody === 'object' && !anno.hasBody['@id']) {
+          _ref = anno.hasBody;
+          _fn = function(b) {
+            var bodyData;
+            bodyData = _this._findById(data['@graph'], b);
+            if (bodyData && typeof bodyData['@type'] === "object" && __indexOf.call(bodyData['@type'], "oa:Tag") >= 0 && bodyData.chars) {
+              return tags.push(bodyData.chars);
+            } else {
+              return body = bodyData;
+            }
+          };
+          for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
+            b = _ref[_j];
+            _fn(b);
+          }
+        } else {
+          body = this._findById(data['@graph'], anno.hasBody);
+        }
         target = this._findById(data['@graph'], anno.hasTarget);
         if (target && target.hasSelector) {
           targetsel = this._findById(data['@graph'], target.hasSelector);
@@ -165,6 +185,7 @@
         tempanno = {
           "id": anno['@id'],
           "text": body.chars,
+          "tags": tags,
           "ranges": [],
           "motivation": anno.motivatedBy
         };
@@ -203,17 +224,17 @@
             processSelector(selector);
           } else if (typeof targetsel.item === 'object') {
             selectors = (function() {
-              var _j, _len2, _ref, _results;
-              _ref = targetsel.item;
+              var _k, _len3, _ref2, _results;
+              _ref2 = targetsel.item;
               _results = [];
-              for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
-                id = _ref[_j];
+              for (_k = 0, _len3 = _ref2.length; _k < _len3; _k++) {
+                id = _ref2[_k];
                 _results.push(this._findById(data['@graph'], id));
               }
               return _results;
             }).call(this);
-            for (_j = 0, _len2 = selectors.length; _j < _len2; _j++) {
-              selector = selectors[_j];
+            for (_k = 0, _len3 = selectors.length; _k < _len3; _k++) {
+              selector = selectors[_k];
               processSelector(selector);
             }
           }
@@ -231,6 +252,7 @@
             "image": image
           };
         }
+        console.log(tempanno);
         annotations.push(tempanno);
       }
       return annotations;
@@ -361,7 +383,8 @@
     };
 
     LoreStore.prototype._dataFor = function(annotation) {
-      var agent, bodysrid, data, specifictarget, targetselector, targetselid, targetsrid, targeturi, tempanno;
+      var agent, bodysrid, data, specifictarget, tag, targetselector, targetselid, targetsrid, targeturi, tempanno, _fn, _i, _len, _ref,
+        _this = this;
       jQuery.extend(annotation, this.options.annotationData);
       bodysrid = 'urn:uuid:' + this._uuid();
       if (annotation.uri) {
@@ -424,6 +447,25 @@
           '@id': annotation.motivation
         };
       }
+      if (annotation.tags) {
+        tempanno['@graph'][0]['oa:hasBody'] = [tempanno['@graph'][0]['oa:hasBody']];
+        _ref = annotation.tags;
+        _fn = function(tag) {
+          bodysrid = 'urn:uuid:' + _this._uuid();
+          tempanno['@graph'][0]['oa:hasBody'].push({
+            '@id': bodysrid
+          });
+          return tempanno['@graph'].push({
+            '@id': bodysrid,
+            '@type': ['cnt:ContentAsText', 'oa:Tag'],
+            'cnt:chars': tag
+          });
+        };
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          tag = _ref[_i];
+          _fn(tag);
+        }
+      }
       if (annotation.quote || annotation.relativeSelection) {
         targetselid = 'urn:uuid:' + this._uuid();
         specifictarget = {
@@ -474,6 +516,7 @@
       }
       tempanno['@graph'].push(targetselector);
       data = JSON.stringify(tempanno);
+      console.log("dataFor", data);
       return data;
     };
 

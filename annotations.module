@@ -92,7 +92,7 @@ function annotations_toc() {
   return $render_array;
 }
 function annotations_search($searchtype='keyword') {
-  if (!in_array($searchtype,array("keyword","body","creator","target","motivation","id"))) {
+  if (!in_array($searchtype,array("keyword","body","creator","target","motivation","id", "tag"))) {
     drupal_access_denied();
     return;
   }
@@ -113,6 +113,8 @@ function annotations_search($searchtype='keyword') {
       return theme('annomotivationsearch',array());
   } else if ($searchtype == 'id'){
       return theme('annoidsearch',array());
+  } else if ($searchtype == 'tag'){
+      return theme('annotagsearch',array());
   }
   return theme('annosearch', array());
 }
@@ -149,6 +151,7 @@ function annotations_page_build(&$page) {
     drupal_add_js($modulePath . '/vendor/annotator/annotator.filter.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.prov.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.reply.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/annotator/annotator.tags.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/scripts/showdown.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.markdown.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/annotations.js', array('every_page' => TRUE));
@@ -180,6 +183,10 @@ function annotations_theme(){
      ),
      'annoidsearch' => array (
        'template' => 'annoidsearch',
+       'variables' => array()
+     ),
+     'annotagsearch' => array (
+       'template' => 'annotagsearch',
        'variables' => array()
      ),
      'myannos' => array(

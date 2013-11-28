@@ -84,6 +84,7 @@ function annotations_toc() {
   $list[] = l("Search Annotations by Creator","annotations/search/creator");
   $list[] = l("Search Annotations by Target","annotations/search/target");
   $list[] = l("Search Annotations by Motivation","annotations/search/motivation");
+  $list[] = l("Search Annotations by Tag","annotations/search/tag");
   #$list[] = l("Search Annotations by ID","annotations/search/id");
   $render_array['repository_list'] = array(
     '#theme' => 'item_list',  

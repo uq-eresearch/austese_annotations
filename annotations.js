@@ -42,11 +42,13 @@ function disableAnnotations() {
 }
 function enableAnnotationsOnElement(el) {
   if (!el.annotationsEnabled){
+      var filterLabel = jQuery(el).data('annolabel') || "";
       jQuery(el).annotator({'bindToDocument': true})
       .annotator('addPlugin', 'Image')
       .annotator('addPlugin', 'Prov')
       .annotator('addPlugin', 'CharRangeSelection')
       .annotator('addPlugin', 'LoreStore')
+      .annotator('addPlugin', 'Tags')
       .annotator('addPlugin', 'Reply')
       .annotator('addPlugin', 'Motivations',{
         "showField": false, // will display via prov plugin field instead
@@ -104,9 +106,32 @@ function enableAnnotationsOnElement(el) {
             label: "Tag"
           }*/
       ]})
-      .annotator('addPlugin', 'Markdown');
-
+      .annotator('addPlugin', 'Markdown')
+      
+      /*.annotator('addPlugin', 'Filter', {
+        filters: [
+        {
+            label: 'Category',
+            property: 'motivation'
+        }, 
+        {
+            label: 'Annotation Author',
+            property: 'creator'
+        }
+        ]
+      })*/
+      ;
+      
       el.annotationsEnabled = true;
+      var filterBars = jQuery('.annotator-filter');
+      // Quick workaround - adjust annotation filter bars so that they don't overlap and are labelled
+      filterBars.each(function(i,el){
+        jQuery(el).css('bottom',(filterBars.length - i - 1)*30 + "px");
+        if (i == filterBars.length -1){
+            jQuery(el).prepend("<strong>" + filterLabel + "</strong>");
+        }
+      });
+      
   }
 }
 function lookup(graph, id){
@@ -216,12 +241,38 @@ function displayAnnotations(options){
                  + (options.displayReplies? "<h4>" + heading + "</h4>" : "")
                  + "<p><small>" + creatorString + "<a href='" + node['@id'] + "'>" + createdString + "</a></small></p>"
                  + (options.displayReplies? annotatesString : ""); 
-            var body = lookup(nodes,node.hasBody);
-            
-            if (body && body.chars){
-                result += "<blockquote class='annobody'>" + converter.makeHtml(body.chars) + "</blockquote>";
+           
+            var hasBody = node.hasBody;
+            if (hasBody && typeof hasBody == "string"){
+                hasBody = [hasBody]
+            } 
+            if (hasBody){
+                var displayTags = "";
+                hasBody.forEach(function(b){
+                    var body = lookup(nodes,b);
+                    if (body){
+                        var type = body["@type"];
+                        var isTag = false;
+                        if (typeof type != "string"){
+                            if (type.indexOf("oa:Tag") > -1){
+                                isTag = true;
+                            }
+                        } else if (type == "oa:Tag"){
+                            isTag = true;
+                        }
+                        if (body && body.chars && !isTag){
+                            result += "<blockquote class='annobody'>" + converter.makeHtml(body.chars) + "</blockquote>";
+                        } else if (body && body.chars){
+                            displayTags += "<span class='label'>" + body.chars + "</span>&nbsp;" 
+                        }
+                    } else {
+                        console.log("COULD NOT FIND BODY",b);
+                    }
+                })
             }
-            
+            if (displayTags){
+                result += "<p>" + displayTags + "</p>";
+            }
             result += "<p style='display:none' class='shareURL'><input style='cursor:text' title='Copy unique identifier for this Annotation' name='annoId' type='text' class='input-xxlarge' readonly value='" + node['@id'] + "'/>";
             if (options.displayReplies && heading != 'Reply') {
                 result += "<div class='replies'></div>";
@@ -462,8 +513,13 @@ function loadAnnotations(page){
     var myUserId = jQuery('#metadata').data('userid');
     // attach handler to annotation search button
     jQuery('#annoSearchBtn').click(function(){
+        var annoTagSearchForm = jQuery('#annoTagSearchForm');
+        if (annoTagSearchForm.length > 0){
+           var annoTag = jQuery('#annoInputDummy').val();
+           jQuery('#annoInput').val(annoTag + ";http://www.w3.org/ns/oa#Tag");
+           console.log(jQuery('#annoInput').val())
+        }
         var data = jQuery(this).closest('.form-search').serializeObject();
-        
         //data.offset = (page? page * pageSize : 0);
         //data.limit = pageSize;
         

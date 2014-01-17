@@ -37,10 +37,10 @@ function enableAnnotations(){
 function enableAnnotationsOnElement(el) {
   if (!el.annotationsEnabled){
       jQuery(el).annotator({'bindToDocument': true})
-      .annotator('addPlugin','Image')
+      .annotator('addPlugin', 'Image')
       .annotator('addPlugin', 'Prov')
       .annotator('addPlugin', 'CharRangeSelection')
-      .annotator('addPlugin','LoreStore')
+      .annotator('addPlugin', 'LoreStore')
       .annotator('addPlugin', 'Reply')
       .annotator('addPlugin', 'Motivations',{
         "showField": false, // will display via prov plugin field instead
@@ -98,9 +98,8 @@ function enableAnnotationsOnElement(el) {
             label: "Tag"
           }*/
       ]})
-      .annotator('addPlugin', 'Markdown')
-      
-      ;
+      .annotator('addPlugin', 'Markdown');
+
       el.annotationsEnabled = true;
   }
 }

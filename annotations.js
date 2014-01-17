@@ -34,6 +34,12 @@ function enableAnnotations(){
       });
     });
 }
+function disableAnnotations() {
+  jQuery('[data-id]').each(function(i, el){
+    jQuery(el).removeAnnotator();
+    el.annotationsEnabled = false;
+  });
+}
 function enableAnnotationsOnElement(el) {
   if (!el.annotationsEnabled){
       jQuery(el).annotator({'bindToDocument': true})

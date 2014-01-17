@@ -139,6 +139,7 @@ function annotations_page_build(&$page) {
     drupal_add_js($modulePath . '/vendor/scripts/jquery.waitforimages.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/scripts/jquery.imgareaselect.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/scripts/jquery.hoverIntent.r7.js', array('every_page' => TRUE));
+    drupal_add_js($modulePath . '/vendor/scripts/diff_match_patch.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.tags.min.js', array('every_page' => TRUE));
     drupal_add_js($modulePath . '/vendor/annotator/annotator.permissions.min.js', array('every_page' => TRUE));

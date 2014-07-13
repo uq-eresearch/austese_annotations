@@ -109,7 +109,7 @@ function enableAnnotationsOnElement(el) {
       .annotator('addPlugin', 'Markdown')
       
       // For now enable filter tool bar on resources pages only
-      if(location.href.indexOf('repository/resources/') >= 0){
+      /*if(location.href.indexOf('repository/resources/') >= 0){
         console.log("adding filter")
           annoTool.annotator('addPlugin', 'Filter', {
             filters: [
@@ -124,7 +124,7 @@ function enableAnnotationsOnElement(el) {
             ]
           })
           ;
-      }
+      }*/
       
       el.annotationsEnabled = true;
       var filterBars = jQuery('.annotator-filter');

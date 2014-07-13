@@ -43,7 +43,7 @@ function disableAnnotations() {
 function enableAnnotationsOnElement(el) {
   if (!el.annotationsEnabled){
       var filterLabel = jQuery(el).data('annolabel') || "";
-      jQuery(el).annotator({'bindToDocument': true})
+      var annoTool = jQuery(el).annotator({'bindToDocument': true})
       .annotator('addPlugin', 'Image')
       .annotator('addPlugin', 'Prov')
       .annotator('addPlugin', 'CharRangeSelection')
@@ -108,29 +108,33 @@ function enableAnnotationsOnElement(el) {
       ]})
       .annotator('addPlugin', 'Markdown')
       
-      /*.annotator('addPlugin', 'Filter', {
-        filters: [
-        {
-            label: 'Category',
-            property: 'motivation'
-        }, 
-        {
-            label: 'Annotation Author',
-            property: 'creator'
-        }
-        ]
-      })*/
-      ;
+      // For now enable filter tool bar on resources pages only
+      if(location.href.indexOf('repository/resources/') >= 0){
+        console.log("adding filter")
+          annoTool.annotator('addPlugin', 'Filter', {
+            filters: [
+            {
+                label: 'Category',
+                property: 'motivation'
+            }, 
+            {
+                label: 'Annotation Author',
+                property: 'creator'
+            }
+            ]
+          })
+          ;
+      }
       
       el.annotationsEnabled = true;
       var filterBars = jQuery('.annotator-filter');
       // Quick workaround - adjust annotation filter bars so that they don't overlap and are labelled
-      filterBars.each(function(i,el){
+      /*filterBars.each(function(i,el){
         jQuery(el).css('bottom',(filterBars.length - i - 1)*30 + "px");
         if (i == filterBars.length -1){
             jQuery(el).prepend("<strong>" + filterLabel + "</strong>");
         }
-      });
+      });*/
       
   }
 }
